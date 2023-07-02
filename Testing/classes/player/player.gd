@@ -64,11 +64,6 @@ func _physics_process(delta):
 	dash(input_vec)
 
 	# x movement
-	@warning_ignore("unused_variable")
-	var add_speed_ground = GROUND_ACCEL_STEP * input_vec.x
-	@warning_ignore("unused_variable")
-	var add_speed_air = AIR_ACCEL_STEP * input_vec.x
-
 	var accel
 
 	if input_vec.x != 0:
@@ -83,10 +78,8 @@ func _physics_process(delta):
 		else:
 			accel = AIR_ACCEL_STEP
 
-		if vel.x * input_vec.x + accel < MAX_SPEED_X:
-			vel.x += input_vec.x * accel
-		elif vel.x * input_vec.x < MAX_SPEED_X:
-			vel.x = input_vec.x * MAX_SPEED_X
+		if vel.x * input_vec.x < MAX_SPEED_X and input_vec.x != 0:
+			vel.x = min(vel.x * input_vec.x + accel, MAX_SPEED_X) * input_vec.x
 
 		if input_vec.x == 0 and is_grounded:
 			vel.x -= GROUND_DECEL_STEP * sign(vel.x)
