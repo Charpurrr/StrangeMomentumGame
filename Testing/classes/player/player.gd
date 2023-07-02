@@ -9,7 +9,7 @@ extends CharacterBody2D
 @onready var wall_cast_right = $WallCastRight
 
 # x
-const MAX_SPEED_X : float = 1.60
+const MAX_SPEED_X : float = 1.75
 
 const GROUND_ACCEL_TIME : int = 7 # in frames
 const GROUND_ACCEL_STEP : float = MAX_SPEED_X / GROUND_ACCEL_TIME
@@ -56,7 +56,7 @@ func _ready():
 
 
 func _physics_process(delta):
-	print(facing_direction)
+#	print(facing_direction)
 
 	var input_vec : Vector2 = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down"))
 
