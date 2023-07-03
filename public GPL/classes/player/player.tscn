@@ -1,0 +1,149 @@
+[gd_scene load_steps=16 format=3 uid="uid://4w6abn332r6a"]
+
+[ext_resource type="Script" path="res://public GPL/classes/player/player.gd" id="1_yxfgd"]
+[ext_resource type="Texture2D" uid="uid://bqr688y3wd14a" path="res://public GPL/classes/player/assets/idle.png" id="2_kprgx"]
+[ext_resource type="Script" path="res://public GPL/classes/player/wallcast.gd" id="3_d8n52"]
+[ext_resource type="Script" path="res://public GPL/classes/player/stamina_ui.gd" id="4_s6wfm"]
+
+[sub_resource type="AtlasTexture" id="16"]
+atlas = ExtResource("2_kprgx")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="17"]
+atlas = ExtResource("2_kprgx")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="18"]
+atlas = ExtResource("2_kprgx")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="19"]
+atlas = ExtResource("2_kprgx")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="20"]
+atlas = ExtResource("2_kprgx")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="21"]
+atlas = ExtResource("2_kprgx")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="22"]
+atlas = ExtResource("2_kprgx")
+region = Rect2(192, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="23"]
+atlas = ExtResource("2_kprgx")
+region = Rect2(224, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="14"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("16")
+}, {
+"duration": 1.0,
+"texture": SubResource("17")
+}, {
+"duration": 1.0,
+"texture": SubResource("18")
+}, {
+"duration": 1.0,
+"texture": SubResource("19")
+}, {
+"duration": 1.0,
+"texture": SubResource("20")
+}, {
+"duration": 1.0,
+"texture": SubResource("21")
+}, {
+"duration": 1.0,
+"texture": SubResource("22")
+}, {
+"duration": 1.0,
+"texture": SubResource("23")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 8.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bkvkx"]
+size = Vector2(6, 8)
+
+[sub_resource type="LabelSettings" id="LabelSettings_oi5wp"]
+line_spacing = 0.1
+font_size = 10
+
+[node name="Madeline" type="CharacterBody2D"]
+texture_filter = 1
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("1_yxfgd")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(0, -4)
+zoom = Vector2(3, 3)
+position_smoothing_enabled = true
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+drag_left_margin = 0.1
+drag_right_margin = 0.1
+editor_draw_limits = true
+editor_draw_drag_margin = true
+
+[node name="Actor" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("14")
+animation = &"idle"
+frame = 6
+offset = Vector2(0, -16)
+
+[node name="Hitbox" type="CollisionShape2D" parent="."]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_bkvkx")
+debug_color = Color(0.87451, 0, 0.831373, 0.419608)
+
+[node name="WallCastLeft" type="Node2D" parent="."]
+visible = false
+script = ExtResource("3_d8n52")
+
+[node name="RayCast2D" type="RayCast2D" parent="WallCastLeft"]
+target_position = Vector2(-6, 0)
+
+[node name="RayCast2D3" type="RayCast2D" parent="WallCastLeft"]
+position = Vector2(0, -4)
+target_position = Vector2(-6, 0)
+
+[node name="RayCast2D6" type="RayCast2D" parent="WallCastLeft"]
+position = Vector2(0, -8)
+target_position = Vector2(-6, 0)
+
+[node name="WallCastRight" type="Node2D" parent="."]
+visible = false
+script = ExtResource("3_d8n52")
+
+[node name="RayCast2D2" type="RayCast2D" parent="WallCastRight"]
+target_position = Vector2(6, 0)
+
+[node name="RayCast2D4" type="RayCast2D" parent="WallCastRight"]
+position = Vector2(0, -4)
+target_position = Vector2(6, 0)
+
+[node name="RayCast2D5" type="RayCast2D" parent="WallCastRight"]
+position = Vector2(0, -8)
+target_position = Vector2(6, 0)
+
+[node name="Label" type="Label" parent="."]
+offset_left = -26.0
+offset_top = -75.0
+offset_right = 27.0
+offset_bottom = -19.0
+text = "walljumps:
+3
+dashes:
+3"
+label_settings = SubResource("LabelSettings_oi5wp")
+horizontal_alignment = 1
+script = ExtResource("4_s6wfm")
+metadata/_edit_use_anchors_ = true
