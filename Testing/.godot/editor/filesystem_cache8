@@ -1,5 +1,5 @@
 2a60927148abd1d33b818b535e306557
-::res://::1688409093
+::res://::1688411162
 icon.png::CompressedTexture2D::2265319200489864295::1659468499::1684933356::1::::<><>::
 ::res://addons/::1687891002
 ::res://addons/tile_bit_tools/::1687891011
@@ -99,24 +99,24 @@ tilesetter_blob.tres::Resource::4405117891217194499::1688408794::0::1::::<><>::r
 tilesetter_wang.tres::Resource::991695917674562364::1688408794::0::1::::<><>::res://addons/tile_bit_tools/core/template_bit_data.gd
 tilesetter_wang_3-terrain.tres::Resource::7211103745452830598::1688408794::0::1::::<><>::res://addons/tile_bit_tools/core/template_bit_data.gd
 tilesetter_wang_3-terrain_transitions.tres::Resource::5052312722630370972::1688408794::0::1::::<><>::res://addons/tile_bit_tools/core/template_bit_data.gd
-::res://private/::1688408684
-::res://private/assets/::1688408794
-::res://private/assets/tiles/::1688409199
-cement.png::CompressedTexture2D::4299080125738405020::1672024149::1688408794::1::::<><>::
-debug.png::CompressedTexture2D::5483509288108338872::1672010983::1688408794::1::::<><>::
-dirt.png::CompressedTexture2D::3476717488922630180::1672019174::1688408794::1::::<><>::
-girder.png::CompressedTexture2D::6341270183479300568::1672021389::1688408794::1::::<><>::
-snow.png::CompressedTexture2D::6995001775656421752::1672019632::1688408794::1::::<><>::
-tilesets.tres::TileSet::6060181040238518597::1688409199::0::1::::<><>::uid://bpsfa8vjblacy<>uid://c6wowl2bs5t65<>uid://ckeiuj6t7fuqa<>uid://cwl018h11ub17<>uid://b2irhseqs1u73
-::res://public GPL/::1688408819
+::res://private/::1688411148
+::res://public GPL/::1688411148
+::res://public GPL/assets/::1688408794
+::res://public GPL/assets/tiles/::1688411149
+cement.png::CompressedTexture2D::4299080125738405020::1672024149::1688411149::1::::<><>::
+debug.png::CompressedTexture2D::5483509288108338872::1672010983::1688411149::1::::<><>::
+dirt.png::CompressedTexture2D::3476717488922630180::1672019174::1688411149::1::::<><>::
+girder.png::CompressedTexture2D::6341270183479300568::1672021389::1688411149::1::::<><>::
+snow.png::CompressedTexture2D::6995001775656421752::1672019632::1688411149::1::::<><>::
+tilesets.tres::TileSet::-1::1688411148::0::1::::<><>::uid://bpsfa8vjblacy<>uid://c6wowl2bs5t65<>uid://ckeiuj6t7fuqa<>uid://cwl018h11ub17<>uid://b2irhseqs1u73
 ::res://public GPL/classes/::1668958784
-::res://public GPL/classes/player/::1688408705
-player.gd::GDScript::-1::1688408446::0::1::::Player<>CharacterBody2D<>::
-player.tscn::PackedScene::2082775076784513338::1688408705::0::1::::<><>::res://classes/player/player.gd<>uid://bqr688y3wd14a<>res://classes/player/wallcast.gd<>res://classes/player/stamina_ui.gd
+::res://public GPL/classes/player/::1688411067
+player.gd::GDScript::-1::1688411055::0::1::::Player<>CharacterBody2D<>::
+player.tscn::PackedScene::2082775076784513338::1688411067::0::1::::<><>::res://public GPL/classes/player/player.gd<>uid://bqr688y3wd14a<>res://public GPL/classes/player/wallcast.gd<>res://public GPL/classes/player/stamina_ui.gd
 stamina_ui.gd::GDScript::-1::1688283422::0::1::::<>Label<>::
 wallcast.gd::GDScript::-1::1687795305::0::1::::<>Node2D<>::
 ::res://public GPL/classes/player/assets/::1688408719
 idle.png::CompressedTexture2D::3546479533342858298::1672008047::1688408719::1::::<><>::
 run_right.png::CompressedTexture2D::2219773408393179922::1668954906::1688408719::1::::<><>::
-::res://public GPL/scenes/::1688409198
-testinggrounds.tscn::PackedScene::8896519098780761112::1688409198::0::1::::<><>::uid://4w6abn332r6a<>res://private/assets/tiles/tilesets.tres
+::res://public GPL/scenes/::1688411148
+testinggrounds.tscn::PackedScene::9215432287920626859::1688411148::0::1::::<><>::uid://4w6abn332r6a<>res://public GPL/assets/tiles/tilesets.tres
