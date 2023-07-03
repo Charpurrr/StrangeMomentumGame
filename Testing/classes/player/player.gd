@@ -27,7 +27,7 @@ const JUMP_POWER : float = 2.56
 const AIR_ACCEL_TIME : int = 9
 const AIR_ACCEL_STEP : float = MAX_SPEED_X / AIR_ACCEL_TIME
 
-var air_decel_time : int = 40 # variable due to walljumps
+var air_decel_time : int = 40 # variable because walljumps change this
 var air_decel_step : float = MAX_SPEED_X / air_decel_time
 
 const COYOTE_TIME : int = 8 # coyote jump
@@ -56,7 +56,7 @@ func _ready():
 
 
 func _physics_process(delta):
-#	print(facing_direction)
+#	print(buffer_timer)
 
 	var input_vec : Vector2 = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down"))
 
@@ -66,7 +66,7 @@ func _physics_process(delta):
 	# x movement
 	var accel
 
-	if input_vec.x != 0:
+	if input_vec.x != 0: # change facing_direction whenever you move
 		facing_direction = input_vec.x
 	
 	if not dashing:
@@ -78,15 +78,21 @@ func _physics_process(delta):
 		else:
 			accel = AIR_ACCEL_STEP
 
-		if vel.x * input_vec.x < MAX_SPEED_X and input_vec.x != 0:
-			vel.x = min(vel.x * input_vec.x + accel, MAX_SPEED_X) * input_vec.x
+		if input_vec.x != 0:
+			if vel.x * input_vec.x + accel < MAX_SPEED_X: # accelerating
+				if vel.x != 0 and input_vec.x != sign(vel.x) and is_on_floor(): # quick turn
+					vel.x = abs(vel.x) * input_vec.x * 0.5
+				else:
+					vel.x += input_vec.x * accel
+			elif vel.x * input_vec.x < MAX_SPEED_X:
+				vel.x = input_vec.x * MAX_SPEED_X
 
-		if input_vec.x == 0 and is_grounded:
+		if input_vec.x == 0 and is_grounded: # decelerating (on ground)
 			vel.x -= GROUND_DECEL_STEP * sign(vel.x)
 
 			if abs(vel.x) < GROUND_DECEL_STEP:
 				vel.x = 0
-		elif input_vec.x == 0:
+		elif input_vec.x == 0: # decelerating (in air)
 			vel.x -= air_decel_step * sign(vel.x)
 
 			if abs(vel.x) < air_decel_step:
@@ -110,7 +116,11 @@ func _physics_process(delta):
 			vel.y += GRAVITY * 0.5
 			vel.y = min(vel.y, TERM_VEL * 0.25)
 
+	print(buffer_timer)
+
 	buffer_timer = max(buffer_timer - 1,0)
+
+	print(buffer_timer)
 
 	if Input.is_action_just_pressed("jump"):
 		buffer_timer = BUFFER_TIME
@@ -136,13 +146,13 @@ func _physics_process(delta):
 
 func jump():
 	dashing = false
-	buffer_timer = 0
 	dash_timer = 0
 
 	if is_on_wall(): # kill speed when colliding with a wall
 		vel.x = 0
 
 	if coyote_timer > 0: # normal/coyote jump
+		buffer_timer = 0
 		vel.y = -JUMP_POWER
 
 		if Input.is_action_pressed("down"): # fuck i mean duck jump
