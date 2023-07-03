@@ -20,9 +20,9 @@ const GROUND_DECEL_STEP : float = MAX_SPEED_X / GROUND_DECEL_TIME
 var vel : Vector2
 
 # y
-const GRAVITY : float = 0.07
+const GRAVITY : float = 0.08
 const TERM_VEL : float = 6.00
-const JUMP_POWER : float = 2.56
+const JUMP_POWER : float = 2.73
 
 const AIR_ACCEL_TIME : int = 9
 const AIR_ACCEL_STEP : float = MAX_SPEED_X / AIR_ACCEL_TIME
