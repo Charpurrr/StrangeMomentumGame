@@ -112,7 +112,7 @@ func _physics_process(delta):
 
 	if not dashing:
 		if Input.is_action_pressed("down") and vel.y > 0: # fast falling
-			vel.y += GRAVITY * 2
+			vel.y += GRAVITY * 1.75
 			vel.y = min(vel.y, TERM_VEL * 2)
 		elif not is_wallsliding(): # normal falling
 			vel.y += GRAVITY
