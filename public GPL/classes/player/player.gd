@@ -30,7 +30,7 @@ const AIR_ACCEL_STEP : float = MAX_SPEED_X / AIR_ACCEL_TIME
 var air_decel_time : int = 40 # variable because walljumps change this
 var air_decel_step : float = MAX_SPEED_X / air_decel_time
 
-const COYOTE_TIME : int = 8 # coyote jump
+const COYOTE_TIME : int = 8 # coyote jumping/falling
 var coyote_timer : int
 
 const BUFFER_TIME : int = 4 # buffer jump
@@ -106,9 +106,11 @@ func _physics_process(delta):
 	# y movement
 	if is_grounded:
 		coyote_timer = COYOTE_TIME
-		vel.y = 0
 	else:
 		coyote_timer -= 1
+
+	if coyote_timer > 0 or is_on_ceiling_only(): # add coyote timing to falling
+		vel.y = 0
 
 	if not dashing:
 		if Input.is_action_pressed("down") and vel.y > 0: # fast falling
@@ -121,11 +123,7 @@ func _physics_process(delta):
 			vel.y += GRAVITY * 0.5
 			vel.y = min(vel.y, TERM_VEL * 0.25)
 
-	print(buffer_timer)
-
 	buffer_timer = max(buffer_timer - 1,0)
-
-	print(buffer_timer)
 
 	if Input.is_action_just_pressed("jump"):
 		buffer_timer = BUFFER_TIME
@@ -157,6 +155,7 @@ func jump():
 		vel.x = 0
 
 	if coyote_timer > 0: # normal/coyote jump
+		coyote_timer = 0
 		buffer_timer = 0
 		vel.y = -JUMP_POWER
 
