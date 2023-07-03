@@ -160,12 +160,16 @@ func jump():
 
 	elif wall_cast_left.is_colliding() and stamina_count != 0: # wall jump left
 		facing_direction = 1
+		buffer_timer = 0
+
 		vel = Vector2(2, -JUMP_POWER)
 		air_decel_time = 300
 		stamina_count = max(stamina_count - 1,0)
 
 	elif wall_cast_right.is_colliding() and stamina_count != 0: # wall jump right
 		facing_direction = -1
+		buffer_timer = 0
+
 		vel = Vector2(-2, -JUMP_POWER)
 		air_decel_time = 300
 		stamina_count = max(stamina_count - 1,0)

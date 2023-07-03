@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dy0smtpastj5a"]
 
 [ext_resource type="PackedScene" uid="uid://4w6abn332r6a" path="res://public GPL/classes/player/player.tscn" id="1_oi0gx"]
-[ext_resource type="TileSet" path="res://private/assets/tiles/tilesets.tres" id="2_reyo1"]
+[ext_resource type="TileSet" uid="uid://cslukcs6m0bcv" path="res://private/assets/tiles/tilesets.tres" id="2_reyo1"]
 
 [node name="ForsakenCityA" type="Node2D"]
 
