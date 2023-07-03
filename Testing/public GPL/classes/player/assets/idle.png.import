@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b2irhseqs1u73"
-path="res://.godot/imported/cement.png-1402ad5bf322834043c361420741c0cd.ctex"
+uid="uid://bqr688y3wd14a"
+path="res://.godot/imported/idle.png-0c75e4b42a05c4b33b3a22a175a31228.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://scenes/tiles/cement.png"
-dest_files=["res://.godot/imported/cement.png-1402ad5bf322834043c361420741c0cd.ctex"]
+source_file="res://public GPL/classes/player/assets/idle.png"
+dest_files=["res://.godot/imported/idle.png-0c75e4b42a05c4b33b3a22a175a31228.ctex"]
 
 [params]
 

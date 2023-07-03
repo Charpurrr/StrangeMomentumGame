@@ -1,4 +1,4 @@
-res://scenes/1a.tscn
+res://scenes/testinggrounds.tscn
 res://addons/tile_bit_tools/templates/godot3_2x2.tres
 res://addons/tile_bit_tools/templates/godot3_3x3_16_tiles.tres
 res://addons/tile_bit_tools/templates/godot3_3x3_minimal.tres
@@ -9,6 +9,3 @@ res://addons/tile_bit_tools/templates/tilesetter_blob.tres
 res://addons/tile_bit_tools/templates/tilesetter_wang.tres
 res://addons/tile_bit_tools/templates/tilesetter_wang_3-terrain.tres
 res://addons/tile_bit_tools/templates/tilesetter_wang_3-terrain_transitions.tres
-res://scenes/tiles/tilesets.tres
-res://classes/player/player.gd
-res://classes/player/player.tscn

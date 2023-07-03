@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Testing"
-run/main_scene="res://scenes/1a.tscn"
+run/main_scene="res://public GPL/scenes/testinggrounds.tscn"
 config/features=PackedStringArray("4.0")
 run/max_fps=60
 config/icon="res://icon.png"

@@ -1,40 +1,40 @@
-[gd_scene load_steps=16 format=3 uid="uid://4w6abn332r6a"]
+[gd_scene load_steps=16 format=3 uid="uid://by5wq4oq8lilj"]
 
-[ext_resource type="Texture2D" uid="uid://bqr688y3wd14a" path="res://classes/player/assets/idle.png" id="1"]
-[ext_resource type="Script" path="res://classes/player/player.gd" id="2"]
-[ext_resource type="Script" path="res://classes/player/wallcast.gd" id="3_jt7q6"]
-[ext_resource type="Script" path="res://classes/player/stamina_ui.gd" id="4_esnc3"]
+[ext_resource type="Script" path="res://public GPL/classes/player/player.gd" id="1_yxfgd"]
+[ext_resource type="Texture2D" uid="uid://bqr688y3wd14a" path="res://public GPL/classes/player/assets/idle.png" id="2_kprgx"]
+[ext_resource type="Script" path="res://public GPL/classes/player/wallcast.gd" id="3_d8n52"]
+[ext_resource type="Script" path="res://public GPL/classes/player/stamina_ui.gd" id="4_s6wfm"]
 
 [sub_resource type="AtlasTexture" id="16"]
-atlas = ExtResource("1")
+atlas = ExtResource("2_kprgx")
 region = Rect2(0, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="17"]
-atlas = ExtResource("1")
+atlas = ExtResource("2_kprgx")
 region = Rect2(32, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="18"]
-atlas = ExtResource("1")
+atlas = ExtResource("2_kprgx")
 region = Rect2(64, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="19"]
-atlas = ExtResource("1")
+atlas = ExtResource("2_kprgx")
 region = Rect2(96, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="20"]
-atlas = ExtResource("1")
+atlas = ExtResource("2_kprgx")
 region = Rect2(128, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="21"]
-atlas = ExtResource("1")
+atlas = ExtResource("2_kprgx")
 region = Rect2(160, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="22"]
-atlas = ExtResource("1")
+atlas = ExtResource("2_kprgx")
 region = Rect2(192, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="23"]
-atlas = ExtResource("1")
+atlas = ExtResource("2_kprgx")
 region = Rect2(224, 0, 32, 32)
 
 [sub_resource type="SpriteFrames" id="14"]
@@ -80,7 +80,7 @@ font_size = 10
 texture_filter = 1
 collision_layer = 2
 collision_mask = 3
-script = ExtResource("2")
+script = ExtResource("1_yxfgd")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(0, -4)
@@ -106,7 +106,7 @@ debug_color = Color(0.87451, 0, 0.831373, 0.419608)
 
 [node name="WallCastLeft" type="Node2D" parent="."]
 visible = false
-script = ExtResource("3_jt7q6")
+script = ExtResource("3_d8n52")
 
 [node name="RayCast2D" type="RayCast2D" parent="WallCastLeft"]
 target_position = Vector2(-6, 0)
@@ -121,7 +121,7 @@ target_position = Vector2(-6, 0)
 
 [node name="WallCastRight" type="Node2D" parent="."]
 visible = false
-script = ExtResource("3_jt7q6")
+script = ExtResource("3_d8n52")
 
 [node name="RayCast2D2" type="RayCast2D" parent="WallCastRight"]
 target_position = Vector2(6, 0)
@@ -143,5 +143,5 @@ text = "sta:
 3"
 label_settings = SubResource("LabelSettings_oi5wp")
 horizontal_alignment = 1
-script = ExtResource("4_esnc3")
+script = ExtResource("4_s6wfm")
 metadata/_edit_use_anchors_ = true
