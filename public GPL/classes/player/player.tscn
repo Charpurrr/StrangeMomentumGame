@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://4w6abn332r6a"]
+[gd_scene load_steps=17 format=3 uid="uid://4w6abn332r6a"]
 
 [ext_resource type="Script" path="res://public GPL/classes/player/player.gd" id="1_yxfgd"]
 [ext_resource type="Texture2D" uid="uid://bqr688y3wd14a" path="res://public GPL/classes/player/assets/idle.png" id="2_kprgx"]
@@ -70,7 +70,10 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bkvkx"]
-size = Vector2(6, 8)
+size = Vector2(6, 6)
+
+[sub_resource type="SeparationRayShape2D" id="SeparationRayShape2D_vbtjp"]
+length = 2.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_oi5wp"]
 line_spacing = 0.1
@@ -100,8 +103,14 @@ frame = 6
 offset = Vector2(0, -16)
 
 [node name="Hitbox" type="CollisionShape2D" parent="."]
-position = Vector2(0, -4)
+position = Vector2(0, -5)
 shape = SubResource("RectangleShape2D_bkvkx")
+debug_color = Color(0.87451, 0, 0.831373, 0.419608)
+
+[node name="RayShape" type="CollisionShape2D" parent="."]
+position = Vector2(0, -2)
+shape = SubResource("SeparationRayShape2D_vbtjp")
+one_way_collision = true
 debug_color = Color(0.87451, 0, 0.831373, 0.419608)
 
 [node name="WallCastLeft" type="Node2D" parent="."]
