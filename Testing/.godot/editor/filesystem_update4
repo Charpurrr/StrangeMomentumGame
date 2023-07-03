@@ -9,3 +9,5 @@ res://addons/tile_bit_tools/templates/tilesetter_blob.tres
 res://addons/tile_bit_tools/templates/tilesetter_wang.tres
 res://addons/tile_bit_tools/templates/tilesetter_wang_3-terrain.tres
 res://addons/tile_bit_tools/templates/tilesetter_wang_3-terrain_transitions.tres
+res://public GPL/scenes/testinggrounds.tscn
+res://private/assets/tiles/tilesets.tres
