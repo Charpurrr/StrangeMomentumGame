@@ -162,7 +162,7 @@ func jump():
 		facing_direction = 1
 		buffer_timer = 0
 
-		vel = Vector2(2, -JUMP_POWER)
+		vel = Vector2(2.5, -JUMP_POWER)
 		air_decel_time = 300
 		stamina_count = max(stamina_count - 1,0)
 
@@ -170,7 +170,7 @@ func jump():
 		facing_direction = -1
 		buffer_timer = 0
 
-		vel = Vector2(-2, -JUMP_POWER)
+		vel = Vector2(-2.5, -JUMP_POWER)
 		air_decel_time = 300
 		stamina_count = max(stamina_count - 1,0)
 
