@@ -27,7 +27,7 @@ const JUMP_POWER : float = 2.73
 const AIR_ACCEL_TIME : int = 9
 const AIR_ACCEL_STEP : float = MAX_SPEED_X / AIR_ACCEL_TIME
 
-var air_decel_time : int = 40 # variable because walljumps change this
+var air_decel_time : int = 40 # variable because wall jumps change this
 var air_decel_step : float = MAX_SPEED_X / air_decel_time
 
 const COYOTE_TIME : int = 8 # coyote jumping/falling
@@ -40,15 +40,23 @@ var buffer_timer : int
 const DASHES : int = 3
 var dash_count : int
 
-const DASH_POWER : float = 3.6
 const DASH_TIME : int = 10
-var dashing : bool
 var dash_timer : int
+
+const DASH_POWER : float = 3.6
+var dashing : bool
 var dash_direction : float
 
 # wall jumping
+const WALL_JUMP_POWER : float = 2.5
+
 const WALL_JUMPS : int = 3
 var wall_jump_count : int
+
+const VEL_SUSTAIN_TIME : int = 8
+var vel_sustain_timer : int
+
+var vel_sustain : float # vel.x before a wall was hit
 
 # misc
 var facing_direction : float = 1 # default to facing right
@@ -148,11 +156,15 @@ func _physics_process(delta):
 
 
 func jump():
+	vel_sustain_timer = VEL_SUSTAIN_TIME # for wall jumps only
 	dashing = false
 	dash_timer = 0
 
-	if is_on_wall(): # kill speed when colliding with a wall
-		vel.x = 0
+	if is_on_wall():
+		vel_sustain_timer = max(vel_sustain_timer - 1,0)
+
+	if vel_sustain_timer == 0: # kill speed when colliding with a wall after vel stops sustaining
+		vel_sustain = 0
 
 	if coyote_timer > 0: # normal/coyote jump
 		coyote_timer = 0
@@ -162,19 +174,21 @@ func jump():
 		if Input.is_action_pressed("down"): # fuck i mean duck jump
 			vel.y = -JUMP_POWER * 0.7
 
-	elif wall_cast_left.is_colliding() and wall_jump_count != 0: # wall jump left
+	elif wall_cast_left.is_colliding() and wall_jump_count != 0 and abs(vel.x) > WALL_JUMP_POWER: # wall jump left
 		facing_direction = 1
+		vel_sustain = vel.x
 		buffer_timer = 0
 
-		vel = Vector2(2.5, -JUMP_POWER)
+		vel = Vector2(WALL_JUMP_POWER + vel_sustain, -JUMP_POWER)
 		air_decel_time = 300
 		wall_jump_count = max(wall_jump_count - 1,0)
 
-	elif wall_cast_right.is_colliding() and wall_jump_count != 0: # wall jump right
+	elif wall_cast_right.is_colliding() and wall_jump_count != 0 and abs(vel.x) > WALL_JUMP_POWER: # wall jump right
 		facing_direction = -1
+		vel_sustain = vel.x
 		buffer_timer = 0
 
-		vel = Vector2(-2.5, -JUMP_POWER)
+		vel = Vector2(-WALL_JUMP_POWER - vel_sustain, -JUMP_POWER)
 		air_decel_time = 300
 		wall_jump_count = max(wall_jump_count - 1,0)
 
