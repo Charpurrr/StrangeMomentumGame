@@ -68,7 +68,7 @@ func _ready():
 
 
 func _physics_process(delta):
-	print(vel_sustain_timer)
+	print(facing_direction)
 
 	var input_vec : Vector2 = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down"))
 
@@ -117,14 +117,14 @@ func _physics_process(delta):
 	else:
 		coyote_timer -= 1
 
-	if coyote_timer > 0 or is_on_ceiling_only(): # add coyote timing to falling
+	if coyote_timer > 0: # add coyote timing to falling
 		vel.y = 0
 
 	if not dashing:
 		if Input.is_action_pressed("down") and vel.y > 0: # fast falling
 			vel.y += GRAVITY * 1.75
 			vel.y = min(vel.y, TERM_VEL * 2)
-		elif not is_wallsliding(): # normal falling
+		elif not (is_wallsliding_left() or is_wallsliding_right()): # normal falling
 			vel.y += GRAVITY
 			vel.y = min(vel.y, TERM_VEL)
 		else: # wall slide falling
@@ -138,7 +138,6 @@ func _physics_process(delta):
 
 	if is_on_wall() and vel.x != 0: # kill speed when colliding with a wall
 		vel_sustain_timer = VEL_SUSTAIN_TIME
-		vel.x = 0
 
 	if vel_sustain_timer == 0: # kill sustained speed after timer finishes
 		vel_sustain = 0
@@ -165,6 +164,7 @@ func _physics_process(delta):
 	# warning-ignore:return_value_discarded
 	set_velocity(vel / delta)
 	move_and_slide()
+	vel = velocity * delta
 
 
 func jump():
@@ -195,6 +195,7 @@ func jump():
 		air_decel_time = 300
 		wall_jump_count = max(wall_jump_count - 1,0)
 
+
 func dash(input_vec): # dash movement
 	if dashing:
 		vel.x = DASH_POWER * sign(dash_direction)
@@ -213,6 +214,12 @@ func dash(input_vec): # dash movement
 
 			dashing = false
 
-func is_wallsliding() -> bool:
-	return (is_on_wall() and vel.y > 0 and 
-	(Input.is_action_pressed("left") or Input.is_action_pressed("right")))
+
+func is_wallsliding_left() -> bool:
+	return (is_on_wall() and vel.y > 0 
+	and Input.is_action_pressed("left") and wall_cast_left.is_colliding())
+	
+	
+func is_wallsliding_right() -> bool:
+	return (is_on_wall() and vel.y > 0 
+	and Input.is_action_pressed("right") and wall_cast_right.is_colliding())
