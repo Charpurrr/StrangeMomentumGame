@@ -40,7 +40,7 @@ var dash_count : int
 const DASH_TIME : int = 10
 var dash_timer : int
 
-const DASH_POWER : float = 10
+const DASH_POWER : float = 3.6
 var dashing : bool
 var dash_direction : float
 
@@ -50,7 +50,7 @@ const WALL_JUMP_POWER : float = 2.5
 const WALL_JUMPS : int = 3
 var wall_jump_count : int
 
-const VEL_SUSTAIN_TIME : int = 200
+const VEL_SUSTAIN_TIME : int = 8
 var vel_sustain_timer : int
 
 var vel_sustain : float # vel.x before a wall was hit
@@ -65,7 +65,7 @@ func _ready():
 
 
 func _physics_process(delta):
-	print(vel_sustain_timer)
+	print(vel_sustain)
 
 	var input_vec : Vector2 = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down"))
 
@@ -128,22 +128,30 @@ func _physics_process(delta):
 			vel.y += GRAVITY * 0.5
 			vel.y = min(vel.y, TERM_VEL * 0.25)
 
-	vel_sustain_timer = max(vel_sustain_timer - 1,0)
+	buffer_timer = max(buffer_timer - 1,0)
+
+	# sustain velocity for walljumps
+	vel_sustain_timer = max(vel_sustain_timer - 1,-1)
 
 	if abs(vel.x) > WALL_JUMP_POWER: # set retained velocity for wall jumps
 		vel_sustain = abs(vel.x)
 
 	if (wall_casting(1) or wall_casting(-1)): # start sustain timer when hitting a wall
-		if vel_sustain_timer == 0:
+		if vel_sustain_timer == -1:
 			vel_sustain_timer = VEL_SUSTAIN_TIME
 	else:
+		if vel_sustain_timer > 0:
+			vel_sustain = 0
+
+		vel_sustain_timer = -1
+
+	if is_grounded: # finish the timer early when touching the ground
 		vel_sustain_timer = 0
 
 	if vel_sustain_timer == 0: # kill sustained speed after timer finishes
 		vel_sustain = 0
 
-	buffer_timer = max(buffer_timer - 1,0)
-
+	# y input stuff
 	if Input.is_action_just_pressed("jump"):
 		buffer_timer = BUFFER_TIME
 
@@ -161,6 +169,7 @@ func _physics_process(delta):
 		if not is_grounded:
 			dash_count = max(dash_count - 1,0)
 
+	# physics
 	# warning-ignore:return_value_discarded
 	set_velocity(vel / delta)
 	move_and_slide()
