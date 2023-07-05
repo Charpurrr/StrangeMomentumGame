@@ -65,7 +65,7 @@ func _ready():
 
 
 func _physics_process(delta):
-	print(vel_sustain)
+	print(vel.x)
 
 	var input_vec : Vector2 = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down"))
 
@@ -97,7 +97,7 @@ func _physics_process(delta):
 			elif vel.x * input_vec.x < MAX_SPEED_X:
 				vel.x = input_vec.x * MAX_SPEED_X
 
-		if input_vec.x == 0 and is_grounded: # decelerating (on ground)
+		if is_grounded and (input_vec.x == 0 or abs(vel.x) > MAX_SPEED_X): # decelerating (on ground)
 			vel.x -= GROUND_DECEL_STEP * sign(vel.x)
 
 			if abs(vel.x) < GROUND_DECEL_STEP:
