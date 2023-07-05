@@ -1,8 +1,8 @@
-[gd_scene load_steps=17 format=3 uid="uid://4w6abn332r6a"]
+[gd_scene load_steps=18 format=3 uid="uid://4w6abn332r6a"]
 
 [ext_resource type="Script" path="res://public GPL/classes/player/player.gd" id="1_yxfgd"]
 [ext_resource type="Texture2D" uid="uid://bqr688y3wd14a" path="res://public GPL/classes/player/assets/idle.png" id="2_kprgx"]
-[ext_resource type="Script" path="res://public GPL/classes/player/wallcast.gd" id="3_d8n52"]
+[ext_resource type="Script" path="res://public GPL/classes/player/rayshape.gd" id="3_qv4qg"]
 [ext_resource type="Script" path="res://public GPL/classes/player/stamina_ui.gd" id="4_s6wfm"]
 
 [sub_resource type="AtlasTexture" id="16"]
@@ -70,10 +70,13 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bkvkx"]
-size = Vector2(6, 5)
+size = Vector2(6, 7)
 
-[sub_resource type="SeparationRayShape2D" id="SeparationRayShape2D_vbtjp"]
-length = 2.0
+[sub_resource type="SeparationRayShape2D" id="SeparationRayShape2D_i3wps"]
+length = 3.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sp5hm"]
+size = Vector2(6, 2)
 
 [sub_resource type="LabelSettings" id="LabelSettings_oi5wp"]
 line_spacing = 0.1
@@ -103,44 +106,33 @@ frame = 6
 offset = Vector2(0, -16)
 
 [node name="Hitbox" type="CollisionShape2D" parent="."]
-position = Vector2(0, -4.5)
+position = Vector2(0, -3.5)
 shape = SubResource("RectangleShape2D_bkvkx")
 debug_color = Color(0.87451, 0, 0.831373, 0.419608)
 
 [node name="RayShape" type="CollisionShape2D" parent="."]
-position = Vector2(0, -2)
-shape = SubResource("SeparationRayShape2D_vbtjp")
+position = Vector2(-4, -3)
+shape = SubResource("SeparationRayShape2D_i3wps")
 debug_color = Color(0.87451, 0, 0.831373, 0.419608)
 
-[node name="WallCastLeft" type="Node2D" parent="."]
-visible = false
-script = ExtResource("3_d8n52")
+[node name="Area2D" type="Area2D" parent="RayShape"]
+position = Vector2(-2, -1)
+script = ExtResource("3_qv4qg")
 
-[node name="RayCast2D" type="RayCast2D" parent="WallCastLeft"]
-target_position = Vector2(-6, 0)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RayShape/Area2D"]
+shape = SubResource("RectangleShape2D_sp5hm")
 
-[node name="RayCast2D3" type="RayCast2D" parent="WallCastLeft"]
-position = Vector2(0, -4)
-target_position = Vector2(-6, 0)
+[node name="RayShape2" type="CollisionShape2D" parent="."]
+position = Vector2(4, -3)
+shape = SubResource("SeparationRayShape2D_i3wps")
+debug_color = Color(0.87451, 0, 0.831373, 0.419608)
 
-[node name="RayCast2D6" type="RayCast2D" parent="WallCastLeft"]
-position = Vector2(0, -8)
-target_position = Vector2(-6, 0)
+[node name="Area2D" type="Area2D" parent="RayShape2"]
+position = Vector2(2, -1)
+script = ExtResource("3_qv4qg")
 
-[node name="WallCastRight" type="Node2D" parent="."]
-visible = false
-script = ExtResource("3_d8n52")
-
-[node name="RayCast2D2" type="RayCast2D" parent="WallCastRight"]
-target_position = Vector2(6, 0)
-
-[node name="RayCast2D4" type="RayCast2D" parent="WallCastRight"]
-position = Vector2(0, -4)
-target_position = Vector2(6, 0)
-
-[node name="RayCast2D5" type="RayCast2D" parent="WallCastRight"]
-position = Vector2(0, -8)
-target_position = Vector2(6, 0)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RayShape2/Area2D"]
+shape = SubResource("RectangleShape2D_sp5hm")
 
 [node name="Label" type="Label" parent="."]
 offset_left = -26.0

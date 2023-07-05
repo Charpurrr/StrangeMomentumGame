@@ -5,9 +5,6 @@ extends CharacterBody2D
 # references
 @onready var hitbox : CollisionShape2D = $Hitbox
 
-@onready var wall_cast_left = $WallCastLeft
-@onready var wall_cast_right = $WallCastRight
-
 # x
 const MAX_SPEED_X : float = 1.75
 
@@ -43,7 +40,7 @@ var dash_count : int
 const DASH_TIME : int = 10
 var dash_timer : int
 
-const DASH_POWER : float = 3.6
+const DASH_POWER : float = 10
 var dashing : bool
 var dash_direction : float
 
@@ -53,7 +50,7 @@ const WALL_JUMP_POWER : float = 2.5
 const WALL_JUMPS : int = 3
 var wall_jump_count : int
 
-const VEL_SUSTAIN_TIME : int = 4
+const VEL_SUSTAIN_TIME : int = 200
 var vel_sustain_timer : int
 
 var vel_sustain : float # vel.x before a wall was hit
@@ -68,7 +65,7 @@ func _ready():
 
 
 func _physics_process(delta):
-	print(facing_direction)
+	print(vel_sustain_timer)
 
 	var input_vec : Vector2 = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down"))
 
@@ -133,11 +130,14 @@ func _physics_process(delta):
 
 	vel_sustain_timer = max(vel_sustain_timer - 1,0)
 
-	if abs(vel.x) > WALL_JUMP_POWER: # retain velocity for wall jumps
+	if abs(vel.x) > WALL_JUMP_POWER: # set retained velocity for wall jumps
 		vel_sustain = abs(vel.x)
 
-	if is_on_wall() and vel.x != 0: # kill speed when colliding with a wall
-		vel_sustain_timer = VEL_SUSTAIN_TIME
+	if (wall_casting(1) or wall_casting(-1)): # start sustain timer when hitting a wall
+		if vel_sustain_timer == 0:
+			vel_sustain_timer = VEL_SUSTAIN_TIME
+	else:
+		vel_sustain_timer = 0
 
 	if vel_sustain_timer == 0: # kill sustained speed after timer finishes
 		vel_sustain = 0
@@ -179,7 +179,7 @@ func jump():
 		if Input.is_action_pressed("down"): # fuck i mean duck jump
 			vel.y = -JUMP_POWER * 0.7
 
-	elif wall_cast_left.is_colliding() and wall_jump_count != 0: # wall jump left
+	elif wall_casting(-1) and wall_jump_count != 0: # wall jump left
 		facing_direction = 1
 		buffer_timer = 0
 
@@ -187,7 +187,7 @@ func jump():
 		air_decel_time = 300
 		wall_jump_count = max(wall_jump_count - 1,0)
 
-	elif wall_cast_right.is_colliding() and wall_jump_count != 0: # wall jump right
+	elif wall_casting(1) and wall_jump_count != 0: # wall jump right
 		facing_direction = -1
 		buffer_timer = 0
 
@@ -217,9 +217,13 @@ func dash(input_vec): # dash movement
 
 func is_wallsliding_left() -> bool:
 	return (is_on_wall() and vel.y > 0 
-	and Input.is_action_pressed("left") and wall_cast_left.is_colliding())
-	
-	
+	and Input.is_action_pressed("left") and wall_casting(-1))
+
+
 func is_wallsliding_right() -> bool:
 	return (is_on_wall() and vel.y > 0 
-	and Input.is_action_pressed("right") and wall_cast_right.is_colliding())
+	and Input.is_action_pressed("right") and wall_casting(1))
+
+
+func wall_casting(check_direction):
+	return test_move(transform, Vector2(3 * check_direction, 0))
