@@ -56,7 +56,7 @@ var vel_sustain_timer : int
 var vel_sustain : float # vel.x before a wall was hit
 
 # double jumping
-var jumps : int = 2
+var jumps : int = 1
 
 # misc
 var facing_direction : float = 1 # default to facing right
@@ -115,7 +115,7 @@ func _physics_process(delta):
 	if is_grounded:
 		coyote_timer = COYOTE_TIME
 		vel_sustain_timer = 0
-		jumps = 2
+		jumps = 1
 	else:
 		coyote_timer -= 1
 
@@ -158,7 +158,19 @@ func _physics_process(delta):
 		buffer_timer = BUFFER_TIME
 
 	if Input.is_action_pressed("jump") and buffer_timer > 0:
-		jump()
+		dashing = false
+		dash_timer = 0
+
+		if coyote_timer > 0: # normal/coyote;double jump
+			jump()
+		elif wall_casting(-1) and wall_jump_count != 0: # wall jump left
+			wall_jump_left()
+		elif wall_casting(1) and wall_jump_count != 0: # wall jump right
+			wall_jump_right()
+		elif jumps == 1: # double jump
+			jumps = max(jumps - 1, 0)
+			jump()
+
 
 	if Input.is_action_just_released("jump") and vel.y < 0: 
 		vel.y *= 0.5
@@ -178,37 +190,16 @@ func _physics_process(delta):
 	vel = velocity * delta
 
 
-func jump():
-	dashing = false
-	dash_timer = 0
+func jump(): # perform jump
+	vel.y = -JUMP_POWER
+	coyote_timer = 0
+	buffer_timer = 0
 
-	if ((coyote_timer > 0 or jumps > 0) and 
-	not (wall_casting(1) or wall_casting(-1))): # normal/coyote;double jump
-		jumps = max(jumps - 1, 0)
-
-		vel.y = -JUMP_POWER
-		coyote_timer = 0
-		buffer_timer = 0
-
-		if Input.is_action_pressed("down"): # fuck i mean duck jump
-			vel.y = -JUMP_POWER * 0.7
-	elif wall_casting(-1) and wall_jump_count != 0: # wall jump left
-		facing_direction = 1
-		buffer_timer = 0
-
-		vel = Vector2(max(vel_sustain, WALL_JUMP_POWER), -JUMP_POWER)
-		air_decel_time = 300
-		wall_jump_count = max(wall_jump_count - 1,0)
-	elif wall_casting(1) and wall_jump_count != 0: # wall jump right
-		facing_direction = -1
-		buffer_timer = 0
-
-		vel = Vector2(-max(vel_sustain, WALL_JUMP_POWER), -JUMP_POWER)
-		air_decel_time = 300
-		wall_jump_count = max(wall_jump_count - 1,0)
+	if Input.is_action_pressed("down"): # fuck i mean duck jump
+		vel.y = -JUMP_POWER * 0.7
 
 
-func dash(input_vec): # dash movement
+func dash(input_vec): # perform dash
 	if dashing:
 		vel.x = DASH_POWER * sign(dash_direction)
 		vel.y = 0
@@ -227,15 +218,33 @@ func dash(input_vec): # dash movement
 			dashing = false
 
 
-func is_wallsliding_left() -> bool:
+func is_wallsliding_left() -> bool: # check if user is trying to wallslide on a left wall
 	return (is_on_wall() and vel.y > 0 
 	and Input.is_action_pressed("left") and wall_casting(-1))
 
 
-func is_wallsliding_right() -> bool:
+func is_wallsliding_right() -> bool: # check if user is trying to wallslide on a right wall
 	return (is_on_wall() and vel.y > 0 
 	and Input.is_action_pressed("right") and wall_casting(1))
 
 
-func wall_casting(check_direction):
+func wall_casting(check_direction) -> bool: # check if the user is near a wall
 	return test_move(transform, Vector2(3 * check_direction, 0))
+
+
+func wall_jump_left(): # perform wall jump from a left wall
+		facing_direction = 1
+		buffer_timer = 0
+
+		vel = Vector2(max(vel_sustain, WALL_JUMP_POWER), -JUMP_POWER)
+		air_decel_time = 300
+		wall_jump_count = max(wall_jump_count - 1,0)
+
+
+func wall_jump_right(): # perform wall jump from a right wall
+	facing_direction = -1
+	buffer_timer = 0
+
+	vel = Vector2(-max(vel_sustain, WALL_JUMP_POWER), -JUMP_POWER)
+	air_decel_time = 300
+	wall_jump_count = max(wall_jump_count - 1,0)
