@@ -55,6 +55,9 @@ var vel_sustain_timer : int
 
 var vel_sustain : float # vel.x before a wall was hit
 
+# double jumping
+var jumps : int = 2
+
 # misc
 var facing_direction : float = 1 # default to facing right
 var is_grounded : bool
@@ -65,7 +68,7 @@ func _ready():
 
 
 func _physics_process(delta):
-	print(vel.x)
+#	print(jumps)
 
 	var input_vec : Vector2 = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down"))
 
@@ -111,6 +114,8 @@ func _physics_process(delta):
 	# y movement
 	if is_grounded:
 		coyote_timer = COYOTE_TIME
+		vel_sustain_timer = 0
+		jumps = 2
 	else:
 		coyote_timer -= 1
 
@@ -145,9 +150,6 @@ func _physics_process(delta):
 
 		vel_sustain_timer = -1
 
-	if is_grounded: # finish the timer early when touching the ground
-		vel_sustain_timer = 0
-
 	if vel_sustain_timer == 0: # kill sustained speed after timer finishes
 		vel_sustain = 0
 
@@ -180,14 +182,16 @@ func jump():
 	dashing = false
 	dash_timer = 0
 
-	if coyote_timer > 0: # normal/coyote jump
+	if ((coyote_timer > 0 or jumps > 0) and 
+	not (wall_casting(1) or wall_casting(-1))): # normal/coyote;double jump
+		jumps = max(jumps - 1, 0)
+
+		vel.y = -JUMP_POWER
 		coyote_timer = 0
 		buffer_timer = 0
-		vel.y = -JUMP_POWER
 
 		if Input.is_action_pressed("down"): # fuck i mean duck jump
 			vel.y = -JUMP_POWER * 0.7
-
 	elif wall_casting(-1) and wall_jump_count != 0: # wall jump left
 		facing_direction = 1
 		buffer_timer = 0
@@ -195,7 +199,6 @@ func jump():
 		vel = Vector2(max(vel_sustain, WALL_JUMP_POWER), -JUMP_POWER)
 		air_decel_time = 300
 		wall_jump_count = max(wall_jump_count - 1,0)
-
 	elif wall_casting(1) and wall_jump_count != 0: # wall jump right
 		facing_direction = -1
 		buffer_timer = 0
