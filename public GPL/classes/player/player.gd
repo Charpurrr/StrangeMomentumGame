@@ -229,7 +229,10 @@ func is_wallsliding_right() -> bool: # check if user is trying to wallslide on a
 
 
 func wall_casting(check_direction) -> bool: # check if the user is near a wall
-	return test_move(transform, Vector2(3 * check_direction, 0))
+	var forgiveness_x = 5.0 + clamp(abs(vel.x), 0.0, DASH_POWER) 
+	# min as 0 (but actually 5)
+	# max as DASH_POWER cuz u don't wanna go flying across the map
+	return test_move(transform, Vector2(forgiveness_x * check_direction, 0))
 
 
 func wall_jump_left(): # perform wall jump from a left wall
