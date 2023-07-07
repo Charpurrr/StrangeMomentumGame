@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bg5cx3uaxacaw"
+path="res://.godot/imported/Hairy Fairy Hotaruna.mp3-230bedd0c136cc986e2ef352adf26bfc.mp3str"
+
+[deps]
+
+source_file="res://public GPL/Hairy Fairy Hotaruna.mp3"
+dest_files=["res://.godot/imported/Hairy Fairy Hotaruna.mp3-230bedd0c136cc986e2ef352adf26bfc.mp3str"]
+
+[params]
+
+loop=true
+loop_offset=0.0
+bpm=0.0
+beat_count=0
+bar_beats=4

@@ -135,23 +135,7 @@ func _physics_process(delta):
 
 	buffer_timer = max(buffer_timer - 1,0)
 
-	# sustain velocity for walljumps
-	vel_sustain_timer = max(vel_sustain_timer - 1,-1)
-
-	if abs(vel.x) > WALL_JUMP_POWER: # set retained velocity for wall jumps
-		vel_sustain = abs(vel.x)
-
-	if (wall_casting(1) or wall_casting(-1)): # start sustain timer when hitting a wall
-		if vel_sustain_timer == -1:
-			vel_sustain_timer = VEL_SUSTAIN_TIME
-	else:
-		if vel_sustain_timer > 0:
-			vel_sustain = 0
-
-		vel_sustain_timer = -1
-
-	if vel_sustain_timer == 0: # kill sustained speed after timer finishes
-		vel_sustain = 0
+	sustain_velocity() # sustain velocity for wall jumps
 
 	# y input stuff
 	if Input.is_action_just_pressed("jump"):
@@ -235,13 +219,32 @@ func wall_casting(check_direction) -> bool: # check if the user is near a wall
 	return test_move(transform, Vector2(forgiveness_x * check_direction, 0))
 
 
-func wall_jump_left(): # perform wall jump from a left wall
-		facing_direction = 1
-		buffer_timer = 0
+func sustain_velocity(): # retain velocity gained from x movement to put into wall jumps
+	vel_sustain_timer = max(vel_sustain_timer - 1,-1)
 
-		vel = Vector2(max(vel_sustain, WALL_JUMP_POWER), -JUMP_POWER)
-		air_decel_time = 300
-		wall_jump_count = max(wall_jump_count - 1,0)
+	if abs(vel.x) > WALL_JUMP_POWER: # set retained velocity for wall jumps
+		vel_sustain = abs(vel.x)
+
+	if (wall_casting(1) or wall_casting(-1)): # start sustain timer when hitting a wall
+		if vel_sustain_timer == -1:
+			vel_sustain_timer = VEL_SUSTAIN_TIME
+	else:
+		if vel_sustain_timer > 0:
+			vel_sustain = 0
+
+		vel_sustain_timer = -1
+
+	if vel_sustain_timer == 0: # kill sustained speed after timer finishes
+		vel_sustain = 0
+
+
+func wall_jump_left(): # perform wall jump from a left wall
+	facing_direction = 1
+	buffer_timer = 0
+
+	vel = Vector2(max(vel_sustain, WALL_JUMP_POWER), -JUMP_POWER)
+	air_decel_time = 300
+	wall_jump_count = max(wall_jump_count - 1,0)
 
 
 func wall_jump_right(): # perform wall jump from a right wall
