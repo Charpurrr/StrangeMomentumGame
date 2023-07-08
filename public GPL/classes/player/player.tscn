@@ -91,7 +91,7 @@ offset_right = 31.0
 offset_bottom = -8.0
 text = "doublejump:
 true
-walljumps:
+wall climbs:
 3
 dashes:
 3"

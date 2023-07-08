@@ -22,7 +22,7 @@ outline_size = 2
 [node name="Bird" parent="." instance=ExtResource("1_oi0gx")]
 z_index = 1
 z_as_relative = false
-position = Vector2(160, 0)
+position = Vector2(928, -256)
 
 [node name="Tiles" type="TileMap" parent="."]
 texture_filter = 1
@@ -68,14 +68,13 @@ debug_color = Color(0, 0.65098, 0.105882, 0.419608)
 [node name="BGM" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_1tagd")
 pitch_scale = 0.75
-autoplay = true
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 scroll_limit_end = Vector2(0, 270)
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
 texture_repeat = 3
-motion_scale = Vector2(0.1, 0.1)
+motion_scale = Vector2(0.1, 0)
 motion_mirroring = Vector2(960, 0)
 
 [node name="City" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]

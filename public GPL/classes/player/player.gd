@@ -47,8 +47,9 @@ var dash_direction : float
 # wall jumping
 const WALL_JUMP_POWER : float = 2.5
 
-const WALL_JUMPS : int = 3
-var wall_jump_count : int
+const WALL_CLIMBS : int = 3 # amt of times the player can jump off the same wall
+var wall_climb_count : int
+var last_climbed_wall : int # in vector
 
 const VEL_SUSTAIN_TIME : int = 8
 var vel_sustain_timer : int
@@ -56,6 +57,7 @@ var vel_sustain_timer : int
 var vel_sustain : float # vel.x before a wall was hit
 
 # double jumping
+const DOUBLE_JUMP_IGNORE : int = 4 # how many frames above the ground a double jump input is ignored
 var jumps : int = 1
 
 # misc
@@ -68,7 +70,7 @@ func _ready():
 
 
 func _physics_process(delta):
-#	print(jumps)
+	print(should_ignore_double_jump())
 
 	var input_vec : Vector2 = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down"))
 
@@ -87,7 +89,7 @@ func _physics_process(delta):
 			accel = GROUND_ACCEL_STEP
 
 			dash_count = DASHES
-			wall_jump_count = WALL_JUMPS
+			wall_climb_count = WALL_CLIMBS
 		else:
 			accel = AIR_ACCEL_STEP
 
@@ -147,11 +149,11 @@ func _physics_process(delta):
 
 		if coyote_timer > 0: # normal/coyote;double jump
 			jump()
-		elif wall_casting(-1) and wall_jump_count != 0: # wall jump left
+		elif wall_casting(-1) and wall_climb_count != 0: # wall jump left
 			wall_jump_left()
-		elif wall_casting(1) and wall_jump_count != 0: # wall jump right
+		elif wall_casting(1) and wall_climb_count != 0: # wall jump right
 			wall_jump_right()
-		elif jumps == 1: # double jump
+		elif jumps == 1 and not should_ignore_double_jump(): # double jump
 			jumps = max(jumps - 1, 0)
 			jump()
 
@@ -168,7 +170,6 @@ func _physics_process(delta):
 			dash_count = max(dash_count - 1,0)
 
 	# physics
-	# warning-ignore:return_value_discarded
 	set_velocity(vel / delta)
 	move_and_slide()
 	vel = velocity * delta
@@ -181,6 +182,9 @@ func jump(): # perform jump
 
 	if Input.is_action_pressed("down"): # fuck i mean duck jump
 		vel.y = -JUMP_POWER * 0.7
+
+func should_ignore_double_jump() -> bool: # whether or not the double jump input is ignored
+	return test_move(transform, Vector2(0, DOUBLE_JUMP_IGNORE))
 
 
 func dash(input_vec): # perform dash
@@ -215,11 +219,11 @@ func is_wallsliding_right() -> bool: # check if user is trying to wallslide on a
 func wall_casting(check_direction) -> bool: # check if the user is near a wall
 	var forgiveness_x = 5.0 + clamp(abs(vel.x), 0.0, DASH_POWER) 
 	# min as 0 (but actually 5)
-	# max as DASH_POWER cuz u don't wanna go flying across the map
+	# max as DASH_POWER cuz u don't wanna be able to wall jump from across the map
 	return test_move(transform, Vector2(forgiveness_x * check_direction, 0))
 
 
-func sustain_velocity(): # retain velocity gained from x movement to put into wall jumps
+func sustain_velocity() -> void: # retain velocity gained from x movement to put into wall jumps
 	vel_sustain_timer = max(vel_sustain_timer - 1,-1)
 
 	if abs(vel.x) > WALL_JUMP_POWER: # set retained velocity for wall jumps
@@ -244,7 +248,15 @@ func wall_jump_left(): # perform wall jump from a left wall
 
 	vel = Vector2(max(vel_sustain, WALL_JUMP_POWER), -JUMP_POWER)
 	air_decel_time = 300
-	wall_jump_count = max(wall_jump_count - 1,0)
+
+	if last_climbed_wall == 1: # right
+		wall_climb_count = WALL_CLIMBS
+		wall_climb_count = max(wall_climb_count - 1,0)
+	else:
+		wall_climb_count = max(wall_climb_count - 1,0)
+
+	last_climbed_wall = -1
+
 
 
 func wall_jump_right(): # perform wall jump from a right wall
@@ -253,4 +265,11 @@ func wall_jump_right(): # perform wall jump from a right wall
 
 	vel = Vector2(-max(vel_sustain, WALL_JUMP_POWER), -JUMP_POWER)
 	air_decel_time = 300
-	wall_jump_count = max(wall_jump_count - 1,0)
+
+	if last_climbed_wall == -1: # left
+		wall_climb_count = WALL_CLIMBS
+		wall_climb_count = max(wall_climb_count - 1,0)
+	else:
+		wall_climb_count = max(wall_climb_count - 1,0)
+
+	last_climbed_wall = 1
