@@ -2,8 +2,7 @@ extends Label
 
 @onready var player = $".."
 
-@warning_ignore("unused_parameter")
-func _process(delta):
+func _process(_delta):
 	text = str(
 		"doublejump:", "\n", str(player.jumps > 0),
 		"\n",

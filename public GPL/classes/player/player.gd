@@ -4,6 +4,7 @@ extends CharacterBody2D
 
 # references
 @onready var hitbox : CollisionShape2D = $Hitbox
+@onready var doll : AnimatedSprite2D = $Doll
 
 # x
 const MAX_SPEED_X : float = 1.75
@@ -69,8 +70,15 @@ func _ready():
 	set_up_direction(Vector2.UP)
 
 
+func _process(_delta):
+	if facing_direction == 1:
+		doll.flip_h = false
+	else:
+		doll.flip_h = true
+
+
 func _physics_process(delta):
-	print(should_ignore_double_jump())
+#	print(should_ignore_double_jump())
 
 	var input_vec : Vector2 = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down"))
 
@@ -175,6 +183,10 @@ func _physics_process(delta):
 	vel = velocity * delta
 
 
+func should_ignore_double_jump() -> bool: # whether or not the double jump input is ignored
+	return test_move(transform, Vector2(0, DOUBLE_JUMP_IGNORE))
+
+
 func jump(): # perform jump
 	vel.y = -JUMP_POWER
 	coyote_timer = 0
@@ -182,9 +194,6 @@ func jump(): # perform jump
 
 	if Input.is_action_pressed("down"): # fuck i mean duck jump
 		vel.y = -JUMP_POWER * 0.7
-
-func should_ignore_double_jump() -> bool: # whether or not the double jump input is ignored
-	return test_move(transform, Vector2(0, DOUBLE_JUMP_IGNORE))
 
 
 func dash(input_vec): # perform dash

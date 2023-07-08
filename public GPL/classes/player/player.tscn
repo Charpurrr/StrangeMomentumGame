@@ -50,7 +50,7 @@ drag_right_margin = 0.1
 editor_draw_limits = true
 editor_draw_drag_margin = true
 
-[node name="Actor" type="AnimatedSprite2D" parent="."]
+[node name="Doll" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("14")
 animation = &"idle"
 offset = Vector2(0, -6.5)
