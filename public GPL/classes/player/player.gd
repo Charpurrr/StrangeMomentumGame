@@ -4,6 +4,12 @@ extends CharacterBody2D
 
 # references
 @onready var hitbox : CollisionShape2D = $Hitbox
+@onready var crouchbox : CollisionShape2D = $Crouchbox
+
+@onready var autocrouch_true : Area2D = $AutocrouchTrue
+@onready var autocrouch_true_alt : Area2D = $AutocrouchTrueAlt
+@onready var autocrouch_false : Area2D = $AutocrouchFalse
+
 @onready var doll : AnimatedSprite2D = $Doll
 
 # x
@@ -64,21 +70,27 @@ var jumps : int = 1
 # misc
 var facing_direction : float = 1 # default to facing right
 var is_grounded : bool
+var crouching : bool
 
 
 func _ready():
 	set_up_direction(Vector2.UP)
 
+	hitbox.disabled = false
+	crouchbox.disabled = true
+
 
 func _process(_delta):
-	if facing_direction == 1:
+	crouch()
+
+	if facing_direction == 1: # flip sprite depending on the way player's facing
 		doll.flip_h = false
 	else:
 		doll.flip_h = true
 
 
 func _physics_process(delta):
-#	print(should_ignore_double_jump())
+	print(should_autocrouch())
 
 	var input_vec : Vector2 = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down"))
 
@@ -181,6 +193,26 @@ func _physics_process(delta):
 	set_velocity(vel / delta)
 	move_and_slide()
 	vel = velocity * delta
+
+
+func should_autocrouch() -> bool:
+	if is_grounded:
+		return (not autocrouch_false.has_overlapping_bodies()
+		and autocrouch_true.has_overlapping_bodies())
+	else:
+		return autocrouch_true_alt.has_overlapping_bodies()
+
+
+func crouch():
+	hitbox.disabled = crouching
+	crouchbox.disabled = not crouching
+
+	if Input.is_action_pressed("down") or should_autocrouch():
+		doll.animation = "crouch"
+		crouching = true
+	else:
+		doll.animation = "idle"
+		crouching = false
 
 
 func should_ignore_double_jump() -> bool: # whether or not the double jump input is ignored
