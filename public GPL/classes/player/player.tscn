@@ -144,7 +144,6 @@ script = ExtResource("3_qv4qg")
 shape = SubResource("RectangleShape2D_sp5hm")
 
 [node name="Label" type="Label" parent="."]
-visible = false
 offset_left = -31.0
 offset_top = -92.0
 offset_right = 31.0
