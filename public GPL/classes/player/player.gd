@@ -6,9 +6,11 @@ extends CharacterBody2D
 @onready var hitbox : CollisionShape2D = $Hitbox
 @onready var crouchbox : CollisionShape2D = $Crouchbox
 
-@onready var autocrouch_true : Area2D = $AutocrouchTrue
-@onready var autocrouch_true_alt : Area2D = $AutocrouchTrueAlt
-@onready var autocrouch_false : Area2D = $AutocrouchFalse
+@onready var autocrouch_area : Area2D = $AutocrouchBox
+@onready var autocrouch_cast_true_r : RayCast2D = $CrawlCastTrueR
+@onready var autocrouch_cast_false_r : RayCast2D = $CrawlCastFalseR
+@onready var autocrouch_cast_true_l : RayCast2D = $CrawlCastTrueL
+@onready var autocrouch_cast_false_l : RayCast2D = $CrawlCastFalseL
 
 @onready var doll : AnimatedSprite2D = $Doll
 
@@ -196,11 +198,13 @@ func _physics_process(delta):
 
 
 func should_autocrouch() -> bool:
-	if is_grounded:
-		return (not autocrouch_false.has_overlapping_bodies()
-		and autocrouch_true.has_overlapping_bodies())
-	else:
-		return autocrouch_true_alt.has_overlapping_bodies()
+	# returns work in series
+	if autocrouch_area.has_overlapping_bodies(): return true # if already in a crawling space
+	if not is_grounded: return false # if you're not grounded
+	# if colliding with a crawling space
+	return ((autocrouch_cast_true_r.is_colliding() and not autocrouch_cast_false_r.is_colliding())
+	or (autocrouch_cast_true_l.is_colliding() and not autocrouch_cast_false_l.is_colliding()))
+
 
 
 func crouch():
