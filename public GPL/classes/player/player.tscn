@@ -72,18 +72,17 @@ animation = &"idle"
 offset = Vector2(-1, -8)
 
 [node name="Hitbox" type="CollisionShape2D" parent="."]
-visible = false
 position = Vector2(0, -5.5)
 shape = SubResource("RectangleShape2D_bkvkx")
 debug_color = Color(0.87451, 0, 0.831373, 0.419608)
 
 [node name="Crouchbox" type="CollisionShape2D" parent="."]
-visible = false
 position = Vector2(0, -3.5)
 shape = SubResource("RectangleShape2D_ct1tn")
 debug_color = Color(0.890196, 0.305882, 0.321569, 0.419608)
 
 [node name="AutocrouchBox" type="Area2D" parent="."]
+visible = false
 
 [node name="Shape" type="CollisionShape2D" parent="AutocrouchBox"]
 position = Vector2(0, -5.5)
@@ -91,7 +90,6 @@ shape = SubResource("RectangleShape2D_jvl3w")
 debug_color = Color(0.301961, 0.698039, 0.337255, 0.419608)
 
 [node name="ForgivenessCastL" type="CollisionShape2D" parent="."]
-visible = false
 position = Vector2(-4, -4)
 shape = SubResource("SeparationRayShape2D_i3wps")
 debug_color = Color(0.87451, 0, 0.831373, 0.419608)
@@ -104,7 +102,6 @@ script = ExtResource("3_qv4qg")
 shape = SubResource("RectangleShape2D_sp5hm")
 
 [node name="ForgivenessCastR" type="CollisionShape2D" parent="."]
-visible = false
 position = Vector2(4, -4)
 shape = SubResource("SeparationRayShape2D_i3wps")
 debug_color = Color(0.87451, 0, 0.831373, 0.419608)
@@ -116,21 +113,15 @@ script = ExtResource("3_qv4qg")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ForgivenessCastR/Area2D"]
 shape = SubResource("RectangleShape2D_sp5hm")
 
-[node name="CrawlCastTrueR" type="RayCast2D" parent="."]
-position = Vector2(3, -8)
-target_position = Vector2(5, 0)
+[node name="CrawlCastTrue" type="RayCast2D" parent="."]
+visible = false
+position = Vector2(0, -8)
+target_position = Vector2(8, 0)
 
-[node name="CrawlCastFalseR" type="RayCast2D" parent="."]
-position = Vector2(3, -6)
-target_position = Vector2(5, 0)
-
-[node name="CrawlCastTrueL" type="RayCast2D" parent="."]
-position = Vector2(-3, -8)
-target_position = Vector2(-5, 0)
-
-[node name="CrawlCastFalseL" type="RayCast2D" parent="."]
-position = Vector2(-3, -6)
-target_position = Vector2(-5, 0)
+[node name="CrawlCastFalse" type="RayCast2D" parent="."]
+visible = false
+position = Vector2(0, -6)
+target_position = Vector2(8, 0)
 
 [node name="Label" type="Label" parent="."]
 offset_left = -31.0

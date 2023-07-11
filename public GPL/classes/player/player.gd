@@ -7,10 +7,8 @@ extends CharacterBody2D
 @onready var crouchbox : CollisionShape2D = $Crouchbox
 
 @onready var autocrouch_area : Area2D = $AutocrouchBox
-@onready var autocrouch_cast_true_r : RayCast2D = $CrawlCastTrueR
-@onready var autocrouch_cast_false_r : RayCast2D = $CrawlCastFalseR
-@onready var autocrouch_cast_true_l : RayCast2D = $CrawlCastTrueL
-@onready var autocrouch_cast_false_l : RayCast2D = $CrawlCastFalseL
+@onready var autocrouch_cast_true : RayCast2D = $CrawlCastTrue
+@onready var autocrouch_cast_false : RayCast2D = $CrawlCastFalse
 
 @onready var doll : AnimatedSprite2D = $Doll
 
@@ -83,17 +81,17 @@ func _ready():
 
 
 func _process(_delta):
+	print(can_walljump_left())
+
 	crouch()
 
-	if facing_direction == 1: # flip sprite depending on the way player's facing
-		doll.flip_h = false
-	else:
-		doll.flip_h = true
+	autocrouch_cast_true.target_position.x = abs(autocrouch_cast_true.target_position.x) * facing_direction
+	autocrouch_cast_false.target_position.x = abs(autocrouch_cast_false.target_position.x) * facing_direction
+
+	doll.flip_h = (facing_direction == -1) # flip sprite depending on the way player's facing
 
 
 func _physics_process(delta):
-	print(should_autocrouch())
-
 	var input_vec : Vector2 = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down"))
 
 	is_grounded = is_on_floor()
@@ -171,9 +169,9 @@ func _physics_process(delta):
 
 		if coyote_timer > 0: # normal/coyote;double jump
 			jump()
-		elif wall_casting(-1) and wall_climb_count != 0: # wall jump left
+		elif can_walljump_left(): # wall jump left
 			wall_jump_left()
-		elif wall_casting(1) and wall_climb_count != 0: # wall jump right
+		elif can_walljump_right(): # wall jump right
 			wall_jump_right()
 		elif jumps == 1 and not should_ignore_double_jump(): # double jump
 			jumps = max(jumps - 1, 0)
@@ -202,8 +200,7 @@ func should_autocrouch() -> bool:
 	if autocrouch_area.has_overlapping_bodies(): return true # if already in a crawling space
 	if not is_grounded: return false # if you're not grounded
 	# if colliding with a crawling space
-	return ((autocrouch_cast_true_r.is_colliding() and not autocrouch_cast_false_r.is_colliding())
-	or (autocrouch_cast_true_l.is_colliding() and not autocrouch_cast_false_l.is_colliding()))
+	return (autocrouch_cast_true.is_colliding() and not autocrouch_cast_false.is_colliding())
 
 
 
@@ -285,6 +282,18 @@ func sustain_velocity() -> void: # retain velocity gained from x movement to put
 
 	if vel_sustain_timer == 0: # kill sustained speed after timer finishes
 		vel_sustain = 0
+
+
+func can_walljump_left() -> bool: # can wall jump from a left wall
+	if not wall_casting(-1): return false
+
+	return (wall_climb_count != 0 or last_climbed_wall == 1)
+
+
+func can_walljump_right() -> bool: # can wall jump from a right wall
+	if not wall_casting(1): return false
+
+	return (wall_climb_count != 0 or last_climbed_wall == -1)
 
 
 func wall_jump_left(): # perform wall jump from a left wall
