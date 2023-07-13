@@ -22,7 +22,7 @@ outline_size = 2
 [node name="Bird" parent="." instance=ExtResource("1_oi0gx")]
 z_index = 1
 z_as_relative = false
-position = Vector2(1264, -128)
+position = Vector2(176, 0)
 
 [node name="Tiles" type="TileMap" parent="."]
 texture_filter = 1
