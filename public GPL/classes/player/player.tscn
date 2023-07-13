@@ -114,12 +114,10 @@ script = ExtResource("3_qv4qg")
 shape = SubResource("RectangleShape2D_sp5hm")
 
 [node name="CrawlCastTrue" type="RayCast2D" parent="."]
-visible = false
-position = Vector2(0, -8)
+position = Vector2(0, -9)
 target_position = Vector2(8, 0)
 
 [node name="CrawlCastFalse" type="RayCast2D" parent="."]
-visible = false
 position = Vector2(0, -6)
 target_position = Vector2(8, 0)
 

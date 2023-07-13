@@ -81,7 +81,7 @@ func _ready():
 
 
 func _process(_delta):
-	print(can_walljump_left())
+	print(autocrouch_cast_true.is_colliding() and not autocrouch_cast_false.is_colliding())
 
 	crouch()
 
@@ -93,45 +93,41 @@ func _process(_delta):
 
 func _physics_process(delta):
 	var input_vec : Vector2 = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down"))
+	var accel
 
 	is_grounded = is_on_floor()
 	dash(input_vec)
 
 	# x movement
-	var accel
-
-	if input_vec.x != 0: # change facing_direction whenever you move
+	if input_vec.x != 0: # update facing_direction whenever you move
 		facing_direction = input_vec.x
 
 	if not dashing:
 		if is_grounded:
 			air_decel_time = 40
-			accel = GROUND_ACCEL_STEP
 
 			dash_count = DASHES
 			wall_climb_count = WALL_CLIMBS
+
+			accel = GROUND_ACCEL_STEP
 		else:
 			accel = AIR_ACCEL_STEP
 
-		if input_vec.x != 0:
-			if vel.x * input_vec.x + accel < MAX_SPEED_X: # accelerating
-				if vel.x != 0 and input_vec.x != sign(vel.x) and is_on_floor(): # quick turn
-					vel.x = abs(vel.x) * input_vec.x * 0.5
+		if input_vec.x != 0: # accelerate
+			if vel.x * input_vec.x + accel < MAX_SPEED_X:
+				if vel.x != 0 and input_vec.x != sign(vel.x) and is_on_floor():
+					vel.x = MAX_SPEED_X * input_vec.x
 				else:
 					vel.x += input_vec.x * accel
 			elif vel.x * input_vec.x < MAX_SPEED_X:
 				vel.x = input_vec.x * MAX_SPEED_X
 
-		if is_grounded and (input_vec.x == 0 or abs(vel.x) > MAX_SPEED_X): # decelerating (on ground)
-			vel.x -= GROUND_DECEL_STEP * sign(vel.x)
+		if abs(vel.x) > MAX_SPEED_X and is_grounded: # decelerate from overdrive
+			vel.x = move_toward(vel.x, (MAX_SPEED_X * facing_direction), GROUND_DECEL_STEP * 0.25)
 
-			if abs(vel.x) < GROUND_DECEL_STEP:
-				vel.x = 0
-		elif input_vec.x == 0: # decelerating (in air)
-			vel.x -= air_decel_step * sign(vel.x)
-
-			if abs(vel.x) < air_decel_step:
-				vel.x = 0
+		if input_vec.x == 0: # decelerate
+			if is_grounded: vel.x = move_toward(vel.x, 0, GROUND_DECEL_STEP)
+			else: vel.x = move_toward(vel.x, 0, air_decel_step)
 
 	# y movement
 	if is_grounded:
@@ -310,7 +306,6 @@ func wall_jump_left(): # perform wall jump from a left wall
 		wall_climb_count = max(wall_climb_count - 1,0)
 
 	last_climbed_wall = -1
-
 
 
 func wall_jump_right(): # perform wall jump from a right wall
