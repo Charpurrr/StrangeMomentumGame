@@ -15,11 +15,14 @@ extends CharacterBody2D
 # x
 const MAX_SPEED_X : float = 1.75
 
-const GROUND_ACCEL_TIME : int = 7 # in frames
+const GROUND_ACCEL_TIME : int = 7 # frames it takes to accel on ground
 const GROUND_ACCEL_STEP : float = MAX_SPEED_X / GROUND_ACCEL_TIME
 
-const GROUND_DECEL_TIME : int = 5 # in frames
+const GROUND_DECEL_TIME : int = 5 # frames it takes to decel on ground
 const GROUND_DECEL_STEP : float = MAX_SPEED_X / GROUND_DECEL_TIME
+
+const QUICK_TURN_IGNORE_TIME : int = 4 # amt of frames quick turning is ignored after landing
+var quick_turn_ignore_timer : int
 
 var vel : Vector2
 
@@ -28,7 +31,7 @@ const GRAVITY : float = 0.08
 const TERM_VEL : float = 6.00
 const JUMP_POWER : float = 2.73
 
-const AIR_ACCEL_TIME : int = 9
+const AIR_ACCEL_TIME : int = 9 # frames it takes to accel in air
 const AIR_ACCEL_STEP : float = MAX_SPEED_X / AIR_ACCEL_TIME
 
 var air_decel_time : int = 40 # variable because wall jumps change this
@@ -81,7 +84,7 @@ func _ready():
 
 
 func _process(_delta):
-	print(autocrouch_cast_true.is_colliding() and not autocrouch_cast_false.is_colliding())
+	print(quick_turn_ignore_timer)
 
 	crouch()
 
@@ -115,8 +118,8 @@ func _physics_process(delta):
 
 		if input_vec.x != 0: # accelerate
 			if vel.x * input_vec.x + accel < MAX_SPEED_X:
-				if vel.x != 0 and input_vec.x != sign(vel.x) and is_on_floor():
-					vel.x = MAX_SPEED_X * input_vec.x
+				if vel.x != 0 and input_vec.x != sign(vel.x) and quick_turn_ignore_timer == 0 and is_on_floor(): # quick turn
+					vel.x = abs(vel.x) * input_vec.x * 0.5
 				else:
 					vel.x += input_vec.x * accel
 			elif vel.x * input_vec.x < MAX_SPEED_X:
@@ -134,7 +137,9 @@ func _physics_process(delta):
 		coyote_timer = COYOTE_TIME
 		vel_sustain_timer = 0
 		jumps = 1
+		quick_turn_ignore_timer = max(quick_turn_ignore_timer - 1,0)
 	else:
+		quick_turn_ignore_timer = QUICK_TURN_IGNORE_TIME
 		coyote_timer -= 1
 
 	if coyote_timer > 0: # add coyote timing to falling
@@ -293,10 +298,15 @@ func can_walljump_right() -> bool: # can wall jump from a right wall
 
 
 func wall_jump_left(): # perform wall jump from a left wall
+	var power_multiplier : float
+
 	facing_direction = 1
 	buffer_timer = 0
 
-	vel = Vector2(max(vel_sustain, WALL_JUMP_POWER), -JUMP_POWER)
+	if crouching: power_multiplier = 0.7
+	else: power_multiplier = 1
+
+	vel = Vector2(max(vel_sustain, WALL_JUMP_POWER), -JUMP_POWER * power_multiplier)
 	air_decel_time = 300
 
 	if last_climbed_wall == 1: # right
@@ -309,10 +319,15 @@ func wall_jump_left(): # perform wall jump from a left wall
 
 
 func wall_jump_right(): # perform wall jump from a right wall
+	var power_multiplier : float
+
 	facing_direction = -1
 	buffer_timer = 0
 
-	vel = Vector2(-max(vel_sustain, WALL_JUMP_POWER), -JUMP_POWER)
+	if crouching: power_multiplier = 0.7
+	else: power_multiplier = 1
+
+	vel = Vector2(-max(vel_sustain, WALL_JUMP_POWER), -JUMP_POWER * power_multiplier)
 	air_decel_time = 300
 
 	if last_climbed_wall == -1: # left
