@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://4w6abn332r6a" path="res://public GPL/classes/player/player.tscn" id="1_oi0gx"]
 [ext_resource type="TileSet" uid="uid://cxxbr1c5t3kdp" path="res://public GPL/assets/tiles/tilesets.tres" id="2_41s7e"]
-[ext_resource type="Texture2D" uid="uid://7jlqgtd1ybkp" path="res://icon.png" id="3_drha8"]
+[ext_resource type="Texture2D" uid="uid://7jlqgtd1ybkp" path="res://public GPL/icon.png" id="3_h1b2y"]
 [ext_resource type="AudioStream" uid="uid://bkt4djdvah0mq" path="res://public GPL/Hairy Fairy Hotaruna.mp3" id="4_1tagd"]
 [ext_resource type="Texture2D" uid="uid://2s0py8ga7ux3" path="res://public GPL/assets/backgrounds/city.png" id="5_qbr7v"]
 
@@ -36,7 +36,7 @@ position = Vector2(33, -360)
 physics_material_override = SubResource("PhysicsMaterial_5ojff")
 
 [node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
-texture = ExtResource("3_drha8")
+texture = ExtResource("3_h1b2y")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
 shape = SubResource("RectangleShape2D_lj83s")
@@ -47,7 +47,7 @@ position = Vector2(-70, -360)
 physics_material_override = SubResource("PhysicsMaterial_5ojff")
 
 [node name="Sprite2D" type="Sprite2D" parent="StaticBody2D2"]
-texture = ExtResource("3_drha8")
+texture = ExtResource("3_h1b2y")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
 shape = SubResource("RectangleShape2D_lj83s")
@@ -59,7 +59,7 @@ scale = Vector2(1, 0.1)
 physics_material_override = SubResource("PhysicsMaterial_5ojff")
 
 [node name="Sprite2D" type="Sprite2D" parent="StaticBody2D3"]
-texture = ExtResource("3_drha8")
+texture = ExtResource("3_h1b2y")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3"]
 shape = SubResource("RectangleShape2D_lj83s")

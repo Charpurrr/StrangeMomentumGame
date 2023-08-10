@@ -92,7 +92,7 @@ func _ready():
 
 
 func _process(_delta):
-	print(can_air_pound)
+#	print(can_air_pound)
 
 	crouch()
 
