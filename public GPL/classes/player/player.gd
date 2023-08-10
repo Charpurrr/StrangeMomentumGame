@@ -43,6 +43,14 @@ var coyote_timer : int
 const BUFFER_TIME : int = 4 # buffer jump
 var buffer_timer : int 
 
+# air pounding
+const AIR_POUND_POWER = 4
+var can_air_pound : bool = false
+var air_pounding : bool
+
+const AIR_POUND_TIME : int = 10
+var air_pound_timer : int
+
 # dashing
 const DASHES : int = 3
 var dash_count : int
@@ -84,7 +92,7 @@ func _ready():
 
 
 func _process(_delta):
-	print(quick_turn_ignore_timer)
+	print(can_air_pound)
 
 	crouch()
 
@@ -93,6 +101,10 @@ func _process(_delta):
 
 	doll.flip_h = (facing_direction == -1) # flip sprite depending on the way player's facing
 
+	# animation
+	if crouching: doll.animation = "crouch"
+	else: doll.animation = "idle"
+
 
 func _physics_process(delta):
 	var input_vec : Vector2 = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down"))
@@ -100,6 +112,7 @@ func _physics_process(delta):
 
 	is_grounded = is_on_floor()
 	dash(input_vec)
+	air_pound()
 
 	# x movement
 	if input_vec.x != 0: # update facing_direction whenever you move
@@ -163,6 +176,7 @@ func _physics_process(delta):
 	# y input stuff
 	if Input.is_action_just_pressed("jump"):
 		buffer_timer = BUFFER_TIME
+		can_air_pound = true
 
 	if Input.is_action_pressed("jump") and buffer_timer > 0:
 		dashing = false
@@ -186,6 +200,8 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("dash") and dash_count != 0:
 		dash_direction = facing_direction
 		dashing = true
+
+		can_air_pound = true
 		
 		if not is_grounded:
 			dash_count = max(dash_count - 1,0)
@@ -204,17 +220,11 @@ func should_autocrouch() -> bool:
 	return (autocrouch_cast_true.is_colliding() and not autocrouch_cast_false.is_colliding())
 
 
-
 func crouch():
 	hitbox.disabled = crouching
 	crouchbox.disabled = not crouching
 
-	if Input.is_action_pressed("down") or should_autocrouch():
-		doll.animation = "crouch"
-		crouching = true
-	else:
-		doll.animation = "idle"
-		crouching = false
+	crouching = Input.is_action_pressed("down") or should_autocrouch()
 
 
 func should_ignore_double_jump() -> bool: # whether or not the double jump input is ignored
@@ -226,8 +236,14 @@ func jump(): # perform jump
 	coyote_timer = 0
 	buffer_timer = 0
 
-	if Input.is_action_pressed("down"): # fuck i mean duck jump
+	if crouching: # crouch hop
 		vel.y = -JUMP_POWER * 0.7
+
+
+func air_pound(): # perform air pound
+	if air_pounding:
+		vel.y += AIR_POUND_POWER
+		air_pounding = false
 
 
 func dash(input_vec): # perform dash
